@@ -1,6 +1,7 @@
 from io import StringIO
 
 from django.core.management import call_command
+from django.db.models import F
 from django.test import TestCase
 
 from quiz.models import Quiz, Question, Answer, QuizQuestion
@@ -24,3 +25,9 @@ class CreateQuizzesTestCase(TestCase):
 
         self.assertIn('Fetching some questions.', out.getvalue())
         self.assertIn('100 new quizzes have been created.', out.getvalue())
+
+        # validate a random quiz
+        quiz = Quiz.objects.first()
+        questions = QuizQuestion.objects.filter(quiz_id=quiz.id).order_by('order')
+        for i in range(10):
+            self.assertEqual(questions[i].order, i + 1)

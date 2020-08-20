@@ -21,3 +21,4 @@ class Answer(models.Model):
 class QuizQuestion(models.Model):
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    order = models.IntegerField(choices=[(i + 1, i + 1) for i in range(10)], default=0)

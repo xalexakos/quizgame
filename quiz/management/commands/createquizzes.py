@@ -45,7 +45,7 @@ class Command(BaseCommand):
                 selected_questions = random.sample(imported_questions, 10)
                 for j in range(10):
                     quiz_questions.append(
-                        QuizQuestion(quiz_id=quiz.id, question_id=selected_questions[j])
+                        QuizQuestion(quiz_id=quiz.id, question_id=selected_questions[j], order=j + 1)
                     )
 
                 QuizQuestion.objects.bulk_create(quiz_questions)

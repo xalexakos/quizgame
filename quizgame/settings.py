@@ -119,3 +119,5 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+OPENTDB_API_URL = 'https://opentdb.com/api.php?amount=50&type=multiple'

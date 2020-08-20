@@ -1,8 +1,4 @@
 {% extends "quiz/base.html" %}
 {% block content %}
-    <div style="text-align: center; width: 100%">
-        <form action="/quiz" method="get">
-            <button>Take a quiz</button>
-        </form>
-    </div>
+    <a class="new-quiz-btn" href="{% url 'quiz_page' %}">Start a random quiz</a>
 {% endblock %}

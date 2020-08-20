@@ -2,11 +2,53 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Welcome to quiz game</title>
+    <title>QuizGame</title>
+    <style>
+        ul.top-bar {
+          list-style-type: none;
+          margin: 0;
+          padding: 0;
+          overflow: hidden;
+          background-color: #A9A9A9;
+        }
+
+        li {
+          float: left;
+        }
+
+        li.nav-item a {
+          display: block;
+          color: white;
+          text-align: center;
+          padding: 14px 16px;
+          color: black;
+          text-decoration: none;
+          font-weight: bold;
+        }
+
+        .question {
+            margin: 0 auto;
+            width: 50%;
+        }
+
+        .new-quiz-btn {
+            display: block;
+            padding: 10px;
+            text-align: center;
+            border-radius: 5px;
+            color: black;
+            font-weight: bold;
+            line-height: 25px;
+            text-decoration: none;
+            font-size: 18px;
+        }
+    </style>
 </head>
-<body>
+<body class="body">
+    <ul class="top-bar">
+        <li class="nav-item home"><a href="{% url 'home_page' %}">QuizGame</a></li>
+    </ul>
     <div>
-        <h1 style="text-align: center">Quiz Game</h1>
         {% block content %}{% endblock %}
     </div>
 </body>

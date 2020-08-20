@@ -1,0 +1,23 @@
+{% extends "quiz/base.html" %}
+{% block content %}
+<div class="registration">
+    <h3>User registration</h3>
+    {% if form.errors %}
+        <div class="has-error">
+            {% for field in form %}
+                {% for error in field.errors %}
+                    <span>{{ error|escape }}</span>
+                {% endfor %}
+            {% endfor %}
+            <br />
+        </div>
+    {% endif %}
+    <form action="" method="post" autocomplete="off">
+        {% csrf_token %}
+        {{ form.username.label}} {{ form.username }} <br /><br />
+        {{ form.password1.label }} {{ form.password1 }} <br /><br />
+        {{ form.password2.label }} {{ form.password2 }} <br /><br />
+        <input type="submit" value="Create user" />
+    </form>
+</div>
+{% endblock %}

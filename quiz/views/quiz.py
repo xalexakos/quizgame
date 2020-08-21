@@ -12,5 +12,5 @@ def quiz_page(request):
             {'no': 2, 'text': 'Ruby'},
             {'no': 3, 'text': 'Kotlin'},
         ]
-        }
+    }
     return render(request, 'quiz/quiz.html', context)

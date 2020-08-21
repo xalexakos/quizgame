@@ -2,9 +2,10 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.shortcuts import render, redirect
 
+from accounts.decorators import anonymous_user
 
-# todo: 1) add the login url in top bar.
-#       2) use messages.
+
+@anonymous_user
 def registration_page(request):
     form = UserCreationForm()
     if request.method == 'POST':
@@ -18,6 +19,7 @@ def registration_page(request):
     return render(request, 'accounts/register.html', context)
 
 
+@anonymous_user
 def login_page(request):
     form = AuthenticationForm()
     context = {'form': form}

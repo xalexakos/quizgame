@@ -1,8 +1,8 @@
-from django.urls import path
+from django.urls import re_path
 
 from .views import home_page, quiz_page
 
 urlpatterns = [
-    path('', home_page, name='home_page'),
-    path('quiz/', quiz_page, name='quiz_page'),
+    re_path(r'^$', home_page, name='home_page'),
+    re_path(r'^quiz/$', quiz_page, name='quiz_page'),
 ]

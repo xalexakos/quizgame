@@ -1,8 +1,12 @@
 from django.db import models
 
+from quiz.managers import QuizManager
+
 
 class Quiz(models.Model):
     created = models.DateTimeField(auto_now_add=True)
+
+    objects = QuizManager()
 
     def __unicode__(self):
         return 'Quiz - %d' % self.id

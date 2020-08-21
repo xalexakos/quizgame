@@ -1,11 +1,13 @@
 {% extends "quiz/base.html" %}
 {% block content %}
 <main class="main-holder">
-    <h3>{{ question }}</h3>
+    <h3>{{ question_no }} - {{ question|safe }}</h3>
     <form action="" method="post">
+        {% csrf_token %}
         {% for ans in answers %}
-            <input type="radio" name="answer" value="{{ ans.no }}" /> {{ ans.text }} <br /><br />
+            <input type="radio" name="answer" value="{{ ans.text }}" /> {{ ans.text|safe }} <br /><br />
         {% endfor %}
+        <input type="submit" value="Submit" class="submit-btn" />
     </form>
 </main>
 {% endblock %}

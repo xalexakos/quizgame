@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect
 
 # todo: 1) add the login url in top bar.
 #       2) use messages.
-def register_page(request):
+def registration_page(request):
     form = UserCreationForm()
     if request.method == 'POST':
         form = UserCreationForm(request.POST)

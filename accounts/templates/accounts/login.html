@@ -1,20 +1,22 @@
 {% extends "quiz/base.html" %}
 {% block content %}
-<div class="registration">
-    <h3>Login</h3>
-    <form action="" method="post" autocomplete="off">
-        {% csrf_token %}
-        {{ form.username.label}} {{ form.username }} <br /><br />
-        {{ form.password.label }} {{ form.password }} <br /><br />
+<main class="main-holder">
+    <h1>Login</h1>
+    {% if messages %}
+        <div>
+            {% for message in messages %}
+            <p class="{% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}has-error{% endif %}">{{ message }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <form class="main-form" action="" method="post" autocomplete="off">
+      {% csrf_token %}
+        {{ form.username.label}} {{ form.username }}
+        {{ form.password.label }} {{ form.password }}
         <input type="submit" value="Login" class="submit-btn" />
     </form>
-    {% if messages %}
-    <ul class="messages">
-        {% for message in messages %}
-            <li class="{% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}has-error{% endif %}">{{ message }}</li>
-        {% endfor %}
-    </ul><br />
-    {% endif %}
+
     <p class="small padding-top">New to QuizGame? <a href="{% url 'registration_page'%}">Register</a> here.</p>
-</div>
+</main>
 {% endblock %}

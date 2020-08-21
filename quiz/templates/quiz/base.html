@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <title>QuizGame</title>
     <style>
+
+        body {
+          height: 100%;
+          font-family: Arial, Helvetica, sans-serif;
+        }
+
         ul.top-bar {
           list-style-type: none;
           margin: 0;
@@ -29,6 +35,10 @@
           font-weight: bold;
         }
 
+        li.nav-item a.big {
+          font-size: 18px;
+        }
+
         li.nav-item span {
             display: block;
             text-align: center;
@@ -50,7 +60,7 @@
             font-weight: bold;
             line-height: 25px;
             text-decoration: none;
-            font-size: 18px;
+            font-size: 22px;
         }
 
         .registration {
@@ -78,23 +88,47 @@
 
         .submit-btn {
             width: 75px;
+            height: 25px;
+            margin: 5px;
         }
 
-        #id_username, #id_password {
+        #id_username, #id_password,
+        #id_password1, #id_password2 {
+            margin: 5px;
             padding: 5px;
         }
 
+        .main {
+            margin: 150px;
+            display: grid;
+            justify-items: center;
+        }
+
+        .main-holder {
+          width: 50%;
+          height: 70%;
+          display: grid;
+          justify-items: center;
+          align-items: center;
+        }
+
+        .main-form {
+          align-self: flex-start;
+          display: grid;
+          justify-items: center;
+          align-items: center;
+        }
     </style>
 </head>
 <body class="body">
     <ul class="top-bar">
-        <li class="nav-item"><a href="{% url 'home_page' %}">QuizGame</a></li>
+        <li class="nav-item"><a class="big" href="{% url 'home_page' %}">QuizGame</a></li>
         {% if request.user.is_authenticated %}
             <li class="nav-item right"><a href="{% url 'logout_page' %}">Logout</a></li>
             <li class="nav-item right"><span>Hello, {{ request.user }}</span></li>
         {% endif %}
     </ul>
-    <div>
+    <div class="main">
         {% block content %}{% endblock %}
     </div>
 </body>

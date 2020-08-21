@@ -1,7 +1,7 @@
 {% extends "quiz/base.html" %}
 {% block content %}
-<div class="registration">
-    <h3>User registration</h3>
+<main class="main-holder">
+    <h1>User registration</h1>
     {% if form.errors %}
         <div class="has-error">
             {% for field in form %}
@@ -12,13 +12,14 @@
             <br />
         </div>
     {% endif %}
-    <form action="" method="post" autocomplete="off">
+
+    <form class="main-form" action="" method="post" autocomplete="off">
         {% csrf_token %}
-        {{ form.username.label}} {{ form.username }} <br /><br />
-        {{ form.password1.label }} {{ form.password1 }} <br /><br />
-        {{ form.password2.label }} {{ form.password2 }} <br /><br />
+        {{ form.username.label}} {{ form.username }}
+        {{ form.password1.label }} {{ form.password1 }}
+        {{ form.password2.label }} {{ form.password2 }}
         <input type="submit" value="Create user" />
     </form>
     <p class="small padding-top">Already have an account? <a href="{% url 'login_page'%}">Login</a> here.</p>
-</div>
+</main>
 {% endblock %}

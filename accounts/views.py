@@ -1,4 +1,4 @@
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.shortcuts import render, redirect
 
@@ -35,3 +35,8 @@ def login_page(request):
         # todo: handle invalid login with messages.
 
     return render(request, 'accounts/login.html', context)
+
+
+def logout_page(request):
+    logout(request)
+    return redirect('login_page')

@@ -19,5 +19,6 @@
         {{ form.password2.label }} {{ form.password2 }} <br /><br />
         <input type="submit" value="Create user" />
     </form>
+    <p class="small padding-top">Already have an account? <a href="{% url 'login_page'%}">Login</a> here.</p>
 </div>
 {% endblock %}

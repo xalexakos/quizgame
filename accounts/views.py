@@ -3,9 +3,8 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.shortcuts import render, redirect
 
 
-# todo: 1) include signup and login links in the related views.
-#       2) add the login url in top bar.
-#       3) use messages.
+# todo: 1) add the login url in top bar.
+#       2) use messages.
 def register_page(request):
     form = UserCreationForm()
     if request.method == 'POST':

@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.shortcuts import render, redirect
@@ -12,7 +13,7 @@ def registration_page(request):
         form = UserCreationForm(request.POST)
         if form.is_valid():
             form.save()
-            # todo: add an info messages that user has been created.
+            messages.add_message(request, messages.SUCCESS, 'Registered user ' + form.cleaned_data.get('username'))
             return redirect('login_page')
 
     context = {'form': form}
@@ -33,8 +34,8 @@ def login_page(request):
         if user is not None:
             login(request, user)
             return redirect('home_page')
-
-        # todo: handle invalid login with messages.
+        else:
+            messages.add_message(request, messages.ERROR, 'Invalid username or password')
 
     return render(request, 'accounts/login.html', context)
 

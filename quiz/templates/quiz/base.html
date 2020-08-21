@@ -16,14 +16,24 @@
           float: left;
         }
 
+        li.right{
+          float: right;
+        }
+
         li.nav-item a {
           display: block;
-          color: white;
           text-align: center;
           padding: 14px 16px;
           color: black;
           text-decoration: none;
           font-weight: bold;
+        }
+
+        li.nav-item span {
+            display: block;
+            text-align: center;
+            padding: 14px 16px;
+            color: black;
         }
 
         .question {
@@ -62,7 +72,11 @@
 </head>
 <body class="body">
     <ul class="top-bar">
-        <li class="nav-item home"><a href="{% url 'home_page' %}">QuizGame</a></li>
+        <li class="nav-item"><a href="{% url 'home_page' %}">QuizGame</a></li>
+        {% if request.user.is_authenticated %}
+            <li class="nav-item right"><a href="{% url 'logout_page' %}">Logout</a></li>
+            <li class="nav-item right"><span>Hello, {{ request.user }}</span></li>
+        {% endif %}
     </ul>
     <div>
         {% block content %}{% endblock %}

@@ -16,6 +16,8 @@ class Quiz(models.Model):
 
 class Question(models.Model):
     text = models.TextField()
+    submitted_answers = models.IntegerField(default=0)
+    submitted_correct_answers = models.IntegerField(default=0)
 
     def __str__(self):
         return self.text

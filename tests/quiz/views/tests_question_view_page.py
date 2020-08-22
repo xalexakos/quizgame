@@ -74,7 +74,7 @@ class QuestionViewPageTestCase(TestCase):
         self.client.force_login(user)
 
         # answer the first question correctly
-        with self.assertNumQueries(11):
+        with self.assertNumQueries(13):
             response = self.client.post('/quiz/%s/question/%s/' % (quiz.pk, question_1.pk), {'answer': 'Washington DC'})
 
         self.assertEqual(response.status_code, 200)
@@ -86,6 +86,10 @@ class QuestionViewPageTestCase(TestCase):
         self.assertEqual(
             UserQuizAnswer.objects.filter(userquiz_id=user_quiz.id, answer__text='Washington DC').count(), 1
         )
+
+        question_1.refresh_from_db()
+        self.assertEqual(question_1.submitted_correct_answers, 1)
+        self.assertEqual(question_1.submitted_answers, 1)
 
         # attempt to answer the first question once more.
         with self.assertNumQueries(9):
@@ -100,8 +104,12 @@ class QuestionViewPageTestCase(TestCase):
             UserQuizAnswer.objects.filter(userquiz_id=user_quiz.id, answer__text='Washington DC').count(), 1
         )
 
+        question_1.refresh_from_db()
+        self.assertEqual(question_1.submitted_correct_answers, 1)
+        self.assertEqual(question_1.submitted_answers, 1)
+
         # answer the second question mistakenly.
-        with self.assertNumQueries(10):
+        with self.assertNumQueries(12):
             response = self.client.post('/quiz/%s/question/%s/' % (quiz.pk, question_2.pk), {'answer': 'Java'})
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, '<p>Your answer "Java" is <span class="has-error">wrong</span>.</p>')
@@ -112,6 +120,10 @@ class QuestionViewPageTestCase(TestCase):
         self.assertEqual(
             UserQuizAnswer.objects.filter(userquiz_id=user_quiz.id, answer__text='Java').count(), 1
         )
+
+        question_2.refresh_from_db()
+        self.assertEqual(question_2.submitted_correct_answers, 0)
+        self.assertEqual(question_2.submitted_answers, 1)
 
     def test_post_final_question(self):
         """ Answer the last question and validate the page's behavior. """
@@ -133,7 +145,7 @@ class QuestionViewPageTestCase(TestCase):
         self.client.force_login(user)
 
         # answer the last question correctly
-        with self.assertNumQueries(11):
+        with self.assertNumQueries(13):
             response = self.client.post('/quiz/%s/question/%s/' % (quiz.pk, question_1.pk), {'answer': 'Washington DC'})
 
         self.assertEqual(response.status_code, 200)

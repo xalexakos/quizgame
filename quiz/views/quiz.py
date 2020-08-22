@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.db.models import F
 from django.shortcuts import render, redirect
 from django.utils.timezone import now
 
@@ -15,10 +16,11 @@ def question_view_page(request, quiz_id, question_id):
     else:
         answers = Answer.objects.filter(question_id=quiz_question.question_id)
 
+    question = quiz_question.question
     context = {
         'quiz_id': quiz_id,
         'question_no': quiz_question.order,
-        'question': quiz_question.question.text,
+        'question': question.text,
         'answers': answers.values('text', 'is_correct')
     }
 
@@ -37,17 +39,25 @@ def question_view_page(request, quiz_id, question_id):
             # register the users answer.
             # the extra check is required to avoid registering the same answer twice.
             UserQuizAnswer.objects.create(**uqa_kwargs)
+            question.submitted_answers = F('submitted_answers') + 1
 
             if answer.is_correct:
+                # count the correct answer
+                question.submitted_correct_answers = F('submitted_correct_answers') + 1
+
                 # keep count of the quiz score.
                 user_quiz.correct_answers += 1
                 user_quiz.save()
+
+            question.save()
+            question.refresh_from_db()
 
         context.update({
             'submitted_answer': True,
             'is_correct': answer.is_correct,
             'user_answer': answer.text,
-            'correct_answer': answers.filter(is_correct=True).first().text
+            'correct_answer': answers.filter(is_correct=True).first().text,
+            'success_ratio': (question.submitted_correct_answers // question.submitted_answers) * 100
         })
 
         if quiz_question.order < 10:
@@ -75,6 +85,11 @@ def start_quiz(request):
     except UserQuiz.DoesNotExist:
         completed_quizzes = UserQuiz.objects.filter(user_id=request.user.id).values_list('quiz_id')
         quiz = Quiz.objects.random(completed_quizzes)
+
+        if not quiz:
+            # no quizzes where found so stay on home page forever.
+            # todo: add an info page that no more quizzed are available.
+            return redirect('home_page')
 
         UserQuiz.objects.create(user_id=request.user.id, quiz_id=quiz.id)
         quiz_question = QuizQuestion.objects.get(quiz_id=quiz.id, order=1)

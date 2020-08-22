@@ -8,6 +8,7 @@
         {% if not is_correct %}
             <p>The correct answer is "{{ correct_answer|safe }}".</p>
         {% endif %}
+        <p>{{ success_ratio }}% of the users answered correctly.</p>
         <br />
         {% if not score %}<a class="next-btn" href="{{ next_question }}">Next question</a>{% endif %}
     {% else %}

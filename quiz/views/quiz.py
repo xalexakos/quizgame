@@ -89,7 +89,6 @@ def start_quiz(request):
 
         if not quiz:
             # no quizzes where found so stay on home page forever.
-            # todo: add an info page that no more quizzed are available.
             return redirect('home_page')
 
         UserQuiz.objects.create(user_id=request.user.id, quiz_id=quiz.id)

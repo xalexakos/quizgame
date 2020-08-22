@@ -1,6 +1,11 @@
 {% extends "quiz/base.html" %}
 {% block content %}
+    {% if not remaining_quizzes %}
+    <h3>You have completed all the available quiz games.</h3>
+    <p>Stay in tune for more action.</p>
+    {% else %}
     <a class="new-quiz-btn" href="{% url 'start_quiz' %}">{% if has_ongoing_quiz %}Resume {{ quiz_repr }}{% else %}Start a random quiz{% endif %}</a>
+    {% endif %}
 
     <h3 style="margin-bottom: 5px;">Quiz history</h3>
     {% if user_quiz_history  %}

@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 
-from quiz.models import UserQuiz
+from quiz.models import UserQuiz, Quiz
 
 
 @login_required(login_url='login_page')
@@ -21,5 +21,6 @@ def home_page(request):
     return render(request, 'quiz/home.html', {
         'has_ongoing_quiz': has_ongoing_quiz,
         'quiz_repr': quiz_repr,
-        'user_quiz_history': user_quiz_history
+        'user_quiz_history': user_quiz_history,
+        'remaining_quizzes': len(user_quiz_history) - Quiz.objects.count()
     })

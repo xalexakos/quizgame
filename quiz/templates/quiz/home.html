@@ -1,4 +1,4 @@
 {% extends "quiz/base.html" %}
 {% block content %}
-    <a class="new-quiz-btn" href="{% url 'start_quiz' %}">Start a random quiz</a>
+    <a class="new-quiz-btn" href="{% url 'start_quiz' %}">{% if has_ongoing_quiz %}Resume {{ quiz_repr }}{% else %}Start a random quiz{% endif %}</a>
 {% endblock %}

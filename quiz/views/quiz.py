@@ -52,12 +52,13 @@ def question_view_page(request, quiz_id, question_id):
             question.save()
             question.refresh_from_db()
 
+        sr = str((question.submitted_correct_answers / question.submitted_answers) * 100)
         context.update({
             'submitted_answer': True,
             'is_correct': answer.is_correct,
             'user_answer': answer.text,
             'correct_answer': answers.filter(is_correct=True).first().text,
-            'success_ratio': (question.submitted_correct_answers // question.submitted_answers) * 100
+            'success_ratio': sr.rstrip('0').rstrip('.') if '.' in sr else sr
         })
 
         if quiz_question.order < 10:

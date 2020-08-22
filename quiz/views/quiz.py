@@ -29,7 +29,9 @@ def start_quiz(request):
     try:
         user_quiz = UserQuiz.objects.get(completed_at__isnull=True, user_id=request.user.id)
     except UserQuiz.DoesNotExist:
-        quiz = Quiz.objects.random()
+        completed_quizzes = UserQuiz.objects.filter(user_id=request.user.id).values_list('quiz_id')
+        quiz = Quiz.objects.random(completed_quizzes)
+
         UserQuiz.objects.create(user_id=request.user.id, quiz_id=quiz.id)
         quiz_question = QuizQuestion.objects.get(quiz_id=quiz.id, order=1)
 

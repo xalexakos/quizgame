@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
+from django.utils.timezone import now
 
 from quiz.models import Answer, QuizQuestion, UserQuiz, Quiz, UserQuizAnswer
 
@@ -12,13 +13,56 @@ def question_view_page(request, quiz_id, question_id):
     except QuizQuestion.DoesNotExist:
         return redirect('home_page')
     else:
-        answers = Answer.objects.filter(question_id=quiz_question.question.pk).values('text')
+        answers = Answer.objects.filter(question_id=quiz_question.question_id)
 
-        context = {
-            'question_no': quiz_question.order,
-            'question': quiz_question.question.text,
-            'answers': answers
+    context = {
+        'quiz_id': quiz_id,
+        'question_no': quiz_question.order,
+        'question': quiz_question.question.text,
+        'answers': answers.values('text', 'is_correct')
+    }
+
+    if request.method == 'POST':
+        # the user has submitted an answer.
+        user_quiz = UserQuiz.objects.get(quiz_id=quiz_id, user_id=request.user.id)
+        answer = answers.get(text=request.POST.get('answer'))
+
+        uqa_kwargs = {
+            'question_id': quiz_question.question_id,
+            'userquiz_id': user_quiz.id,
+            'answer_id': answer.id
         }
+
+        if not UserQuizAnswer.objects.filter(**uqa_kwargs).exists():
+            # register the users answer.
+            # the extra check is required to avoid registering the same answer twice.
+            UserQuizAnswer.objects.create(**uqa_kwargs)
+
+            if answer.is_correct:
+                # keep count of the quiz score.
+                user_quiz.correct_answers += 1
+                user_quiz.save()
+
+        context.update({
+            'submitted_answer': True,
+            'is_correct': answer.is_correct,
+            'user_answer': answer.text,
+            'correct_answer': answers.filter(is_correct=True).first().text
+        })
+
+        if quiz_question.order < 10:
+            # the user has not completed the test yet.
+            # include the next question url into the context.
+            next_question = QuizQuestion.objects.filter(quiz_id=quiz_id, order=quiz_question.order + 1) \
+                .values('question_id').first()
+            context.update({'next_question': '/quiz/%s/question/%s/' % (quiz_id, next_question['question_id'])})
+        else:
+            # the quiz has been completed.
+            # display the score.
+            user_quiz.completed_at = now()
+            user_quiz.save()
+
+            context.update({'score': user_quiz.correct_answers})
 
     return render(request, 'quiz/quiz.html', context)
 

@@ -1,13 +1,29 @@
 {% extends "quiz/base.html" %}
 {% block content %}
 <main class="main-holder">
+    <h1>Quiz - {{ quiz_id }}</h1>
     <h3>{{ question_no }} - {{ question|safe }}</h3>
-    <form action="" method="post">
-        {% csrf_token %}
-        {% for ans in answers %}
-            <input type="radio" name="answer" value="{{ ans.text }}" /> {{ ans.text|safe }} <br /><br />
-        {% endfor %}
-        <input type="submit" value="Submit" class="submit-btn" />
-    </form>
+    {% if submitted_answer %}
+        <p>Your answer "{{ user_answer|safe }}" is {% if is_correct %}<span class="success">correct</span>{% else %}<span class="has-error">wrong</span>{% endif %}.</p>
+        {% if not is_correct %}
+            <p>The correct answer is "{{ correct_answer|safe }}".</p>
+        {% endif %}
+        <br />
+        {% if not score %}<a href="{{ next_question }}">Next question</a>{% endif %}
+    {% else %}
+        <form method="post">
+            {% csrf_token %}
+            {% for ans in answers %}
+                <input type="radio" name="answer" value="{{ ans.text }}" required /> {{ ans.text|safe }} <br /><br />
+            {% endfor %}
+            <input type="submit" value="Submit" class="submit-btn" />
+        </form>
+    {% endif %}
+    {% if score %}
+        <h3>The quiz has been completed.</h3>
+        <p>Your score is: <h2>{{ score }} / 10</h2></p>
+        <a href="/quiz/">Take another quiz</a>
+        <a href="/">Return to home page</a>
+    {% endif %}
 </main>
 {% endblock %}

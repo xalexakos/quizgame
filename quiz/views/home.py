@@ -9,12 +9,17 @@ def home_page(request):
     has_ongoing_quiz = False
     quiz_repr = ''
 
-    ongoing_quiz = UserQuiz.objects.filter(user_id=request.user.id, completed_at__isnull=True).first()
-    if ongoing_quiz:
-        has_ongoing_quiz = True
-        quiz_repr = '%s' % ongoing_quiz.quiz
+    user_quiz_history = []
+    user_quiz = UserQuiz.objects.filter(user_id=request.user.id).prefetch_related('quiz').order_by('-completed_at')
+    for q in user_quiz:
+        if q.completed_at is None:
+            has_ongoing_quiz = True
+            quiz_repr = '%s' % q.quiz
+        else:
+            user_quiz_history.append({'quiz': '%s' % q, 'score': q.correct_answers, 'completed_at': q.completed_at})
 
     return render(request, 'quiz/home.html', {
         'has_ongoing_quiz': has_ongoing_quiz,
-        'quiz_repr': quiz_repr
+        'quiz_repr': quiz_repr,
+        'user_quiz_history': user_quiz_history
     })

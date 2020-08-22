@@ -1,7 +1,6 @@
 from io import StringIO
 
 from django.core.management import call_command
-from django.db.models import F
 from django.test import TestCase
 
 from quiz.models import Quiz, Question, Answer, QuizQuestion
@@ -16,15 +15,15 @@ class CreateQuizzesTestCase(TestCase):
         self.assertEqual(QuizQuestion.objects.count(), 0)
 
         out = StringIO()
-        call_command('createquizzes', stdout=out)
+        call_command('createquizzes', '5', stdout=out)
 
         self.assertEqual(Question.objects.count(), 50)
         self.assertEqual(Answer.objects.count(), 200)
-        self.assertEqual(Quiz.objects.count(), 100)
-        self.assertEqual(QuizQuestion.objects.count(), 1000)
+        self.assertEqual(Quiz.objects.count(), 5)
+        self.assertEqual(QuizQuestion.objects.count(), 50)
 
-        self.assertIn('Fetching some questions.', out.getvalue())
-        self.assertIn('100 new quizzes have been created.', out.getvalue())
+        self.assertIn('Fetched a new list of questions.', out.getvalue())
+        self.assertIn('Created quiz "1","2","3","4","5"', out.getvalue())
 
         # validate a random quiz
         quiz = Quiz.objects.first()

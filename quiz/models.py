@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.db.models import UniqueConstraint, Q
 
 from quiz.managers import QuizManager
 
@@ -43,6 +44,13 @@ class UserQuiz(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     completed_at = models.DateTimeField(null=True)
     correct_answers = models.IntegerField(choices=[(i + 1, i + 1) for i in range(10)], default=0)
+
+    class Meta:
+        # a user can only have one running quiz.
+        constraints = [
+            UniqueConstraint(fields=['user'], condition=Q(completed_at__isnull=True),
+                             name='unique_running_quiz_user')
+        ]
 
     def __str__(self):
         return '%s' % self.quiz

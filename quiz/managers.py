@@ -8,7 +8,7 @@ class QuizManager(models.Manager):
         if not exclude_ids:
             exclude_ids = []
 
-        count = self.aggregate(count=Count('id'))['count']
+        count = self.exclude(id__in=exclude_ids).aggregate(count=Count('id'))['count']
         if not count:
             return
 

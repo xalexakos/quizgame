@@ -9,7 +9,7 @@
             <p>The correct answer is "{{ correct_answer|safe }}".</p>
         {% endif %}
         <br />
-        {% if not score %}<a href="{{ next_question }}">Next question</a>{% endif %}
+        {% if not score %}<a class="next-btn" href="{{ next_question }}">Next question</a>{% endif %}
     {% else %}
         <form method="post">
             {% csrf_token %}
@@ -22,8 +22,10 @@
     {% if score %}
         <h3>The quiz has been completed.</h3>
         <p>Your score is: <h2>{{ score }} / 10</h2></p>
-        <a href="/quiz/">Take another quiz</a>
-        <a href="/">Return to home page</a>
+    <div>
+        <a class="next-btn" href="/quiz/">Take another quiz</a>
+        <a style="margin-left: 5px;" class="next-btn" href="/">Return to home page</a>
+    </div>
     {% endif %}
 </main>
 {% endblock %}

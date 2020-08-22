@@ -140,8 +140,8 @@ class QuestionViewPageTestCase(TestCase):
         self.assertContains(response, '<p>Your answer "Washington DC" is <span class="success">correct</span>.</p>')
         self.assertContains(response, '<h3>The quiz has been completed.</h3>')
         self.assertContains(response, '<p>Your score is: <h2>1 / 10</h2></p>')
-        self.assertContains(response, '<a href="/quiz/">Take another quiz</a>')
-        self.assertContains(response, '<a href="/">Return to home page</a>')
+        self.assertContains(response, '<a class="next-btn" href="/quiz/">Take another quiz</a>')
+        self.assertContains(response, '<a style="margin-left: 5px;" class="next-btn" href="/">Return to home page</a>')
 
         user_quiz.refresh_from_db()
         self.assertEqual(user_quiz.correct_answers, 1)

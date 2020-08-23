@@ -5,15 +5,6 @@ from django.db.models import UniqueConstraint, Q
 from quiz.managers import QuizManager
 
 
-class Quiz(models.Model):
-    created = models.DateTimeField(auto_now_add=True)
-
-    objects = QuizManager()
-
-    def __str__(self):
-        return 'Quiz - %d' % self.id
-
-
 class Question(models.Model):
     text = models.TextField()
     submitted_answers = models.IntegerField(default=0)
@@ -24,12 +15,22 @@ class Question(models.Model):
 
 
 class Answer(models.Model):
-    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='answers')
     text = models.TextField()
     is_correct = models.BooleanField(default=False)
 
     def __str__(self):
         return self.text
+
+
+class Quiz(models.Model):
+    questions = models.ManyToManyField(Question, through='QuizQuestion')
+    created = models.DateTimeField(auto_now_add=True)
+
+    objects = QuizManager()
+
+    def __str__(self):
+        return 'Quiz - %d' % self.id
 
 
 class QuizQuestion(models.Model):

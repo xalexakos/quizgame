@@ -9,7 +9,7 @@ Install python 3.8 and PIP (20.0.2)
 Navigate to the projects root directory (quizgame).
 
 Install the projects requirements (requirements.txt), preferably in a python virtualenv.  
-> python3 -m venv quizegame-env
+> python3 -m venv quizgame-env
 
 > source quizgame-env/bin/activate
 

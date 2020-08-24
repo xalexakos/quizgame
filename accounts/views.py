@@ -13,7 +13,8 @@ def registration_page(request):
         form = UserCreationForm(request.POST)
         if form.is_valid():
             form.save()
-            messages.add_message(request, messages.SUCCESS, 'Registered user ' + form.cleaned_data.get('username'))
+            messages.add_message(request, messages.SUCCESS,
+                                 'User "' + form.cleaned_data.get('username') + '" has been registered.')
             return redirect('login_page')
 
     context = {'form': form}

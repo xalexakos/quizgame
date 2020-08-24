@@ -41,7 +41,7 @@ def get_quiz_executions(quiz_id):
     return successful_runs, total_runs
 
 
-def set_quiz_success_rate(quiz_id, is_successful=False):
+def increment_quiz_success_rate(quiz_id, is_successful=False):
     """ Sets the new quiz success rate values (success, total). """
     # call this method in order to re-create the cached data if somehow they are gone.
     _, _ = get_quiz_executions(quiz_id)

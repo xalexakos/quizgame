@@ -16,7 +16,10 @@ def home_page(request):
             has_ongoing_quiz = True
             quiz_repr = '%s' % q.quiz
         else:
-            user_quiz_history.append({'quiz': '%s' % q, 'score': q.correct_answers, 'completed_at': q.completed_at})
+            user_quiz_history.append({
+                'quiz': '%s' % q, 'score': q.correct_answers,
+                'success_rate': 0, 'completed_at': q.completed_at
+            })
 
     return render(request, 'quiz/home.html', {
         'has_ongoing_quiz': has_ongoing_quiz,

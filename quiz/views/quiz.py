@@ -75,6 +75,9 @@ def question_view_page(request, quiz_id, question_id):
 
             context.update({'score': user_quiz.correct_answers})
 
+            if user_quiz.correct_answers > 7:
+                user_quiz.quiz.successful_completions = F('successful_completions') + 1
+
     return render(request, 'quiz/quiz.html', context)
 
 

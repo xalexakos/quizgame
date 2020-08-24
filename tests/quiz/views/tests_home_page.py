@@ -45,9 +45,17 @@ class HomePageTestCase(TestCase):
         ])
         response = self.client.get('', follow=True)
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, '<tr><th>Quiz</th><th>Score</th><th>Completed</th></tr>')
-        self.assertContains(response, '<tr><td style="width: 100px; text-align: left;">Quiz - 3</td>')
-        self.assertContains(response, '<tr><td style="width: 100px; text-align: left;">Quiz - 2</td>')
-        self.assertContains(response, '<td style="width: 50px; text-align: right;">0 / 10</td>')
-        self.assertContains(response, '<td style="width: 250px; text-align: right;">Aug. 2, 2020, 10 a.m.</td>')
-        self.assertContains(response, '<td style="width: 250px; text-align: right;">Aug. 1, 2020, 10 a.m.</td>')
+
+        # table headers
+        self.assertContains(response, '<th class="ht-quiz">Quiz</th>')
+        self.assertContains(response, '<th class="ht-score">Score</th>')
+        self.assertContains(response, '<th class="ht-rate">8+ answers</th>')
+        self.assertContains(response, '<th class="ht-date">Completed at</th>')
+
+        # table results
+        self.assertContains(response, '<td class="ht-quiz">Quiz - 3</td>')
+        self.assertContains(response, '<td class="ht-quiz">Quiz - 2</td>')
+        self.assertContains(response, '<td class="ht-score">0 / 10</td>')
+        self.assertContains(response, '<td class="ht-rate">0%</td>')
+        self.assertContains(response, '<td class="ht-date">Aug. 2, 2020, 10 a.m.</td>')
+        self.assertContains(response, '<td class="ht-date">Aug. 1, 2020, 10 a.m.</td>')

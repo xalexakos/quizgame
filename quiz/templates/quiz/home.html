@@ -7,17 +7,25 @@
     <a class="new-quiz-btn" href="{% url 'start_quiz' %}">{% if has_ongoing_quiz %}Resume {{ quiz_repr }}{% else %}Start a random quiz{% endif %}</a>
     {% endif %}
 
-    <h3 style="margin-bottom: 5px;">Quiz history</h3>
+    <h3 style="margin: 50px 0 25px 0">History</h3>
     {% if user_quiz_history  %}
     <table>
         <thead>
-            <tr><th>Quiz</th><th>Score</th><th>Completed</th></tr>
+            <tr>
+                <th class="ht-quiz">Quiz</th>
+                <th class="ht-score">Score</th>
+                <th class="ht-rate">8+ answers</th>
+                <th class="ht-date">Completed at</th>
+            </tr>
         </thead>
         <tbody>
             {% for qh in user_quiz_history %}
-                <tr><td style="width: 100px; text-align: left;">{{ qh.quiz }}</td>
-                    <td style="width: 50px; text-align: right;">{{ qh.score }} / 10</td>
-                    <td style="width: 250px; text-align: right;">{{ qh.completed_at }}</td></tr>
+                <tr>
+                    <td class="ht-quiz">{{ qh.quiz }}</td>
+                    <td class="ht-score">{{ qh.score }} / 10</td>
+                    <td class="ht-rate">{{ qh.success_rate }}%</td>
+                    <td class="ht-date">{{ qh.completed_at }}</td>
+                </tr>
             {% endfor %}
         </tbody>
     </table>

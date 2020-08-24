@@ -1,9 +1,11 @@
 import json
 
+from django.core.cache import cache
 from django.test import TestCase
 from django.urls import reverse
 
 from quiz.models import Quiz, Question, Answer, QuizQuestion
+from utils import increment_quiz_success_rate
 
 
 class QuizGameAPIViewTestCase(TestCase):
@@ -171,3 +173,33 @@ class QuizGameAPIViewTestCase(TestCase):
                                         content_type='application/json')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json(), {'correct_answers_no': 2})
+
+
+class QuizGameSuccessRateAPIViewTestCase(TestCase):
+    view_name = 'quiz_success_rate'
+
+    def setUp(self):
+        cache.clear()
+
+    def test_get(self):
+        """ QuizGameSuccessRateAPIView get() method. """
+        quiz = Quiz.objects.create()
+        quiz_2 = Quiz.objects.create()
+        quiz_3 = Quiz.objects.create()
+
+        for i in range(4):
+            increment_quiz_success_rate(quiz.id, is_successful=i % 2 == 0)
+            increment_quiz_success_rate(quiz_2.id, is_successful=i % 2 == 1)
+            increment_quiz_success_rate(quiz_3.id, is_successful=i % 2 == 2)
+
+        with self.assertNumQueries(1):
+            response = self.client.get(reverse(self.view_name))
+        self.assertEqual(response.status_code, 200)
+
+        result = json.loads(response.content)
+        self.assertEqual(list(result.keys()), ['results'])
+        self.assertEqual(len(result['results']), 3)
+
+        self.assertEqual(result['results'][0], {'id': quiz.id, 'success_rate': '50%'})
+        self.assertEqual(result['results'][1], {'id': quiz_2.id, 'success_rate': '50%'})
+        self.assertEqual(result['results'][2], {'id': quiz_3.id, 'success_rate': '0%'})

@@ -11,7 +11,7 @@ Navigate to the projects root directory (quizgame).
 Install the projects requirements (requirements.txt), preferably in a python virtualenv.  
 > python3 -m venv quizegame-env
 
-> source quizegame-env/bin/activate
+> source quizgame-env/bin/activate
 
 > pip install -r requirements.txt  
 

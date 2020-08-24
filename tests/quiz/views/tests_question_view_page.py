@@ -1,10 +1,15 @@
 from django.contrib.auth.models import User
+from django.core.cache import cache
 from django.test import TestCase
 
 from quiz.models import Quiz, Question, QuizQuestion, Answer, UserQuiz, UserQuizAnswer
+from utils import get_quiz_executions
 
 
 class QuestionViewPageTestCase(TestCase):
+    def setUp(self):
+        cache.clear()
+
     def test_get(self):
         """ Validate the question view page rendering. """
         quiz = Quiz.objects.create()
@@ -145,7 +150,7 @@ class QuestionViewPageTestCase(TestCase):
         self.client.force_login(user)
 
         # answer the last question correctly
-        with self.assertNumQueries(13):
+        with self.assertNumQueries(15):
             response = self.client.post('/quiz/%s/question/%s/' % (quiz.pk, question_1.pk), {'answer': 'Washington DC'})
 
         self.assertEqual(response.status_code, 200)
@@ -161,3 +166,16 @@ class QuestionViewPageTestCase(TestCase):
         self.assertEqual(
             UserQuizAnswer.objects.filter(userquiz_id=user_quiz.id, answer__text='Washington DC').count(), 1
         )
+
+        # validate that cache was incremented.
+        self.assertEqual(UserQuiz.objects.filter(completed_at__isnull=False).count(), 1)
+        with self.assertNumQueries(0):
+            self.assertEqual(get_quiz_executions(quiz.id), (0, 1))
+
+        with self.assertNumQueries(9):
+            response = self.client.post('/quiz/%s/question/%s/' % (quiz.pk, question_1.pk), {'answer': 'Washington DC'})
+
+        self.assertEqual(response.status_code, 200)
+
+        with self.assertNumQueries(0):
+            self.assertEqual(get_quiz_executions(quiz.id), (0, 2))

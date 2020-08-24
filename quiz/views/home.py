@@ -1,7 +1,9 @@
 from django.contrib.auth.decorators import login_required
+from django.core.cache import cache
 from django.shortcuts import render
 
 from quiz.models import UserQuiz, Quiz
+from utils import calculate_perc, get_quiz_executions
 
 
 @login_required(login_url='login_page')
@@ -16,9 +18,13 @@ def home_page(request):
             has_ongoing_quiz = True
             quiz_repr = '%s' % q.quiz
         else:
+            while cache.get('qtr:%s:lock' % q.quiz_id) is not None:
+                continue
+
+            success_rate = calculate_perc(*get_quiz_executions(q.quiz_id))
             user_quiz_history.append({
                 'quiz': '%s' % q, 'score': q.correct_answers,
-                'success_rate': 0, 'completed_at': q.completed_at
+                'success_rate': success_rate, 'completed_at': q.completed_at
             })
 
     return render(request, 'quiz/home.html', {

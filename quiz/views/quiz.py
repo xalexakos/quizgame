@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect
 from django.utils.timezone import now
 
 from quiz.models import Answer, QuizQuestion, UserQuiz, Quiz, UserQuizAnswer
+from utils import set_quiz_success_rate
 
 
 @login_required(login_url='login_page')
@@ -69,14 +70,13 @@ def question_view_page(request, quiz_id, question_id):
             context.update({'next_question': '/quiz/%s/question/%s/' % (quiz_id, next_question['question_id'])})
         else:
             # the quiz has been completed.
+            set_quiz_success_rate(user_quiz.quiz_id, is_successful=user_quiz.correct_answers > 7)
+
             # display the score.
             user_quiz.completed_at = now()
             user_quiz.save()
 
             context.update({'score': user_quiz.correct_answers})
-
-            if user_quiz.correct_answers > 7:
-                user_quiz.quiz.successful_completions = F('successful_completions') + 1
 
     return render(request, 'quiz/quiz.html', context)
 

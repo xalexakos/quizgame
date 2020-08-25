@@ -55,3 +55,14 @@ def increment_quiz_success_rate(quiz_id, is_successful=False):
 
     # release the lock
     cache.delete('qtr:%s:lock' % quiz_id)
+
+
+def get_user_history(user_id):
+    """ Calculate and cache the user's completed quizzes. """
+    history_qs = cache.get('uhq:%s' % user_id)
+
+    if not history_qs:
+        history_qs = UserQuiz.objects.filter(user_id=user_id).prefetch_related('quiz').order_by('-completed_at')
+        cache.set('uhq:%s' % user_id, history_qs)
+
+    return history_qs

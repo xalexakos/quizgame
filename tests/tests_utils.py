@@ -1,8 +1,12 @@
+from datetime import datetime
+
+from django.contrib.auth.models import User
 from django.core.cache import cache
 from django.test import TestCase
+from pytz import utc
 
-from quiz.models import Quiz
-from utils import calculate_perc, get_quiz_executions, increment_quiz_success_rate
+from quiz.models import Quiz, UserQuiz
+from utils import calculate_perc, get_quiz_executions, increment_quiz_success_rate, get_user_history
 
 
 class QuizGameUtilsTestCase(TestCase):
@@ -49,3 +53,23 @@ class QuizGameUtilsTestCase(TestCase):
 
         self.assertEqual(suc, 1)
         self.assertEqual(tot, 2)
+
+    def test_get_user_history(self):
+        user = User.objects.create(username='testuser')
+
+        quiz = Quiz.objects.create()
+        quiz2 = Quiz.objects.create()
+        UserQuiz.objects.create(user_id=user.id, quiz_id=quiz.id,
+                                completed_at=datetime(2020, 8, 1, 10, 0, 0, tzinfo=utc))
+        UserQuiz.objects.create(user_id=user.id, quiz_id=quiz2.id,
+                                completed_at=datetime(2020, 8, 2, 10, 0, 0, tzinfo=utc))
+
+        with self.assertNumQueries(2):
+            user_history = get_user_history(user.id)
+
+        self.assertEqual(user_history.count(), 2)
+
+        with self.assertNumQueries(0):
+            user_history = get_user_history(user.id)
+
+        self.assertEqual(user_history.count(), 2)

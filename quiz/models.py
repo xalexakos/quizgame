@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.core.cache import cache
 from django.db import models
 from django.db.models import UniqueConstraint, Q
 
@@ -57,6 +58,11 @@ class UserQuiz(models.Model):
 
     def __str__(self):
         return '%s' % self.quiz
+
+    def save(self, *args, **kwargs):
+        """ Delete the cached quiz history queryset. """
+        super(UserQuiz, self).save(*args, **kwargs)
+        cache.delete('uhq:%s' % self.user_id)
 
 
 class UserQuizAnswer(models.Model):

@@ -2,8 +2,8 @@ from django.contrib.auth.decorators import login_required
 from django.core.cache import cache
 from django.shortcuts import render
 
-from quiz.models import UserQuiz, Quiz
-from utils import calculate_perc, get_quiz_executions
+from quiz.models import Quiz
+from utils import calculate_perc, get_quiz_executions, get_user_history
 
 
 @login_required(login_url='login_page')
@@ -12,7 +12,8 @@ def home_page(request):
     quiz_repr = ''
 
     user_quiz_history = []
-    user_quiz = UserQuiz.objects.filter(user_id=request.user.id).prefetch_related('quiz').order_by('-completed_at')
+    user_quiz = get_user_history(user_id=request.user.id)
+
     for q in user_quiz:
         if q.completed_at is None:
             has_ongoing_quiz = True

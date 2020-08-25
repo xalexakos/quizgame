@@ -36,3 +36,13 @@ Access the application by typing the following url in any browser, create an acc
 ## Tests 
 In order to execute the tests type:
 > python manage.py test --settings=tests.settings
+
+
+#
+# API
+
+GET http://127.0.0.1:8000/api/quiz/ returns a random quiz in JSON format.
+
+POST http://127.0.0.1:8000/api/quiz/ submits a quiz and returns the number of correct answers in JSON format.
+
+GET http://127.0.0.1:8000/api/quiz/success-rate/ returns the percentage of submissions with more than 7 correct answers per quiz.

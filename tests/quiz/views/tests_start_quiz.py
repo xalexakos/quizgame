@@ -44,7 +44,9 @@ class StartQuizTestCase(TestCase):
         self.assertEqual(UserQuiz.objects.filter(user_id=user.id).count(), 0)
 
         # start a new test.
-        response = self.client.get('/quiz/', follow=True)
+        with self.assertNumQueries(13):
+            response = self.client.get('/quiz/', follow=True)
+
         self.assertEqual(response.status_code, 200)
         self.assertRedirects(response, '/quiz/%s/question/%s/' % (quiz.id, question_1.id))
 
@@ -53,7 +55,9 @@ class StartQuizTestCase(TestCase):
         self.assertEqual(user_quiz.quiz_id, quiz.id)
 
         # resume the test
-        response = self.client.get('/quiz/', follow=True)
+        with self.assertNumQueries(11):
+            response = self.client.get('/quiz/', follow=True)
+
         self.assertEqual(response.status_code, 200)
         self.assertRedirects(response, '/quiz/%s/question/%s/' % (quiz.id, question_1.id))
 
@@ -66,6 +70,8 @@ class StartQuizTestCase(TestCase):
         UserQuizAnswer.objects.create(userquiz_id=user_quiz.id, question_id=question_1.pk, answer_id=answer.id)
 
         # resume the test
-        response = self.client.get('/quiz/', follow=True)
+        with self.assertNumQueries(11):
+            response = self.client.get('/quiz/', follow=True)
+
         self.assertEqual(response.status_code, 200)
         self.assertRedirects(response, '/quiz/%s/question/%s/' % (quiz.id, question_2.id))

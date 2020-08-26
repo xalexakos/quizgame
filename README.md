@@ -1,6 +1,6 @@
 # quizgame
 
-A django quiz game project using questions from https://opentdb.com/ in python3.8 and Django3.1
+A django quiz game project using questions from https://opentdb.com/ using python3.8 and Django3.1
 
 ## Quick installation guide
 
